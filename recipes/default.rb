@@ -24,7 +24,7 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
-if node['cloud']['provider'] == 'ec2'
+if node['cloud'] && node['cloud']['provider'] == 'ec2'
   if ['debian','ubuntu'].member? node['platform']
     fqdn = node['set_fqdn']
     if fqdn
@@ -82,4 +82,3 @@ if node['cloud']['provider'] == 'ec2'
     end
   end
 end
-
