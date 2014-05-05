@@ -36,6 +36,8 @@ if node['cloud'] && node['cloud']['provider'] == 'ec2'
         file '/etc/hostname' do
           content hostname
           mode "0644"
+          # don't try this in a Docker container b/c /etc/hostname isn't writeable
+          not_if { ::File.exists?("/.dockerinit") }
         end
         execute "hostname -F /etc/hostname" do
           # don't try this in a Docker container b/c /etc/hostname isn't writeable
