@@ -38,7 +38,9 @@ if node['cloud'] && node['cloud']['provider'] == 'ec2'
           mode "0644"
         end
         execute "hostname -F /etc/hostname"
-        changed=true
+        # don't try this in a Docker container b/c /etc/hostname isn't writeable
+        not_if { ::File.exists?("/.dockerinit") }
+        changed = true
       end
 
       if node['fqdn'] != fqdn
@@ -47,6 +49,8 @@ if node['cloud'] && node['cloud']['provider'] == 'ec2'
           owner "root"
           group "root"
           mode "0644"
+          # don't try this in a Docker container b/c /etc/hosts isn't writeable
+          not_if { ::File.exists?("/.dockerinit") }
           variables({
             :ipaddress => node['ipaddress'],
             :fqdn => fqdn,
